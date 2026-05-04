@@ -1,0 +1,425 @@
+/* =============================================================================
+ * Animated Submit Button — adapted from Uiverse.io/marcelodolza
+ * Theme-swapped to match XpressFinserve brand:
+ *   - Inner pill: deep blue gradient (var(--primary) #1A3C6E)
+ *   - Letter accent flash: gold (var(--secondary) #C9A84C)
+ *   - Text: white
+ *   - Font: inherits from page (no override)
+ *
+ * Animation behaviour preserved from original:
+ *   - Letters slide-in on mount (load animation)
+ *   - Hover: letter wave + spinning conic-gradient outline
+ *   - Click → :focus: paper plane takes off, "Sent" + check appears
+ * ========================================================================== */
+
+.button {
+  --accent: var(--secondary, #C9A84C);   /* gold flash */
+  --pill-1: var(--primary, #1A3C6E);     /* main blue */
+  --pill-2: #142E54;                     /* slightly darker blue for gradient */
+  --radius: 14px;
+
+  cursor: pointer;
+  border-radius: var(--radius);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
+  border: none;
+  box-shadow:
+    0 0.5px 0.5px 1px rgba(255, 255, 255, 0.15),
+    0 10px 20px rgba(26, 60, 110, 0.3),
+    0 4px 5px 0px rgba(0, 0, 0, 0.08);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: all 0.3s ease;
+
+  min-width: 200px;
+  padding: 20px;
+  height: 64px;
+
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: #FFFFFF;
+  background: transparent;
+}
+
+/* Full-width modifier — used by the form's submit button. */
+.buttonFullWidth {
+  width: 100%;
+}
+
+.button:hover {
+  transform: scale(1.01);
+  box-shadow:
+    0 0 1px 2px rgba(255, 255, 255, 0.2),
+    0 15px 30px rgba(26, 60, 110, 0.4),
+    0 10px 3px -3px rgba(0, 0, 0, 0.05);
+}
+
+.button:active {
+  transform: scale(1);
+  box-shadow:
+    0 0 1px 2px rgba(255, 255, 255, 0.2),
+    0 10px 3px -3px rgba(0, 0, 0, 0.2);
+}
+
+/* Disabled state — kill animations & dim */
+.button:disabled,
+.button[aria-disabled='true'] {
+  cursor: not-allowed;
+  opacity: 0.55;
+  filter: grayscale(0.3);
+}
+.button:disabled:hover,
+.button[aria-disabled='true']:hover {
+  transform: none;
+}
+.button:disabled .outline,
+.button[aria-disabled='true'] .outline {
+  display: none;
+}
+
+/* Outer border ring */
+.button::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius);
+  border: 2.5px solid transparent;
+  background:
+    linear-gradient(var(--pill-1), var(--pill-2)) padding-box,
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.25), rgba(0, 0, 0, 0.45)) border-box;
+  z-index: 0;
+  transition: all 0.4s ease;
+}
+.button:hover::after {
+  transform: scale(1.03, 1.08);
+  box-shadow: inset 0 -1px 3px 0 rgba(255, 255, 255, 0.35);
+}
+
+/* Inner pill surface (the actual button face) */
+.button::before {
+  content: '';
+  inset: 7px 6px 6px 6px;
+  position: absolute;
+  background: linear-gradient(to top, var(--pill-1), var(--pill-2));
+  border-radius: 30px;
+  filter: blur(0.5px);
+  z-index: 2;
+}
+
+/* States container */
+.state {
+  padding-left: 29px;
+  z-index: 2;
+  display: flex;
+  position: relative;
+}
+.state p {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+}
+
+.stateSent {
+  display: none;
+}
+.stateSent svg {
+  transform: scale(1.25);
+  margin-right: 8px;
+}
+
+.button:focus .stateDefault {
+  position: absolute;
+}
+.button:focus .stateSent {
+  display: flex;
+}
+
+/* Icon positioning (left side) */
+.icon {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  transform: scale(1.25);
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.icon svg {
+  overflow: visible;
+}
+
+/* Spinning outline glow on hover */
+.outline {
+  position: absolute;
+  border-radius: inherit;
+  overflow: hidden;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  inset: -2px -3.5px;
+}
+.outline::before {
+  content: '';
+  position: absolute;
+  inset: -100%;
+  background: conic-gradient(
+    from 180deg,
+    transparent 60%,
+    rgba(255, 255, 255, 0.85) 80%,
+    transparent 100%
+  );
+  animation: spin 2s linear infinite;
+  animation-play-state: paused;
+}
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+.button:hover .outline {
+  opacity: 1;
+}
+.button:hover .outline::before {
+  animation-play-state: running;
+}
+
+/* Letter animations */
+.state p span {
+  display: block;
+  opacity: 0;
+  animation: slideDown 0.8s ease forwards calc(var(--i) * 0.03s);
+}
+.button:hover p span {
+  opacity: 1;
+  animation: wave 0.5s ease forwards calc(var(--i) * 0.02s);
+}
+.button:focus p span {
+  opacity: 1;
+  animation: disapear 0.6s ease forwards calc(var(--i) * 0.03s);
+}
+
+@keyframes wave {
+  30% {
+    opacity: 1;
+    transform: translateY(4px) translateX(0) rotate(0);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(-3px) translateX(0) rotate(0);
+    color: var(--accent);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) translateX(0) rotate(0);
+  }
+}
+
+@keyframes slideDown {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px) translateX(5px) rotate(-90deg);
+    color: var(--accent);
+    filter: blur(5px);
+  }
+  30% {
+    opacity: 1;
+    transform: translateY(4px) translateX(0) rotate(0);
+    filter: blur(0);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(-3px) translateX(0) rotate(0);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) translateX(0) rotate(0);
+  }
+}
+
+@keyframes disapear {
+  from { opacity: 1; }
+  to {
+    opacity: 0;
+    transform: translateX(5px) translateY(20px);
+    color: var(--accent);
+    filter: blur(5px);
+  }
+}
+
+/* Plane idle/landing/takeoff */
+.stateDefault .icon svg {
+  animation: land 0.6s ease forwards;
+}
+.button:hover .stateDefault .icon {
+  transform: rotate(45deg) scale(1.25);
+}
+.button:focus .stateDefault svg {
+  animation: takeOff 0.8s linear forwards;
+}
+.button:focus .stateDefault .icon {
+  transform: rotate(0) scale(1.25);
+}
+@keyframes takeOff {
+  0% { opacity: 1; }
+  60% {
+    opacity: 1;
+    transform: translateX(70px) rotate(45deg) scale(2);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(160px) rotate(45deg) scale(0);
+  }
+}
+@keyframes land {
+  0% {
+    transform: translateX(-60px) translateY(30px) rotate(-50deg) scale(2);
+    opacity: 0;
+    filter: blur(3px);
+  }
+  100% {
+    transform: translateX(0) translateY(0) rotate(0);
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+
+/* Smoke contrail behind plane on takeoff */
+.stateDefault .icon::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  height: 2px;
+  width: 0;
+  left: -5px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(255, 255, 255, 0.5)
+  );
+}
+.button:focus .stateDefault .icon::before {
+  animation: contrail 0.8s linear forwards;
+}
+@keyframes contrail {
+  0% { width: 0; opacity: 1; }
+  8% { width: 15px; }
+  60% { opacity: 0.7; width: 80px; }
+  100% { opacity: 0; width: 160px; }
+}
+
+/* ===========================================================================
+ * Variants
+ * ======================================================================== */
+
+/* Gold variant — inverts the palette for top-of-funnel "Apply Now" CTAs:
+ *   - Inner pill: gold gradient
+ *   - Text: deep blue
+ *   - Letter accent flash: blue
+ *   - Plane and check icons: deep blue (inherit currentColor)
+ */
+.buttonGold {
+  --accent: var(--primary, #1A3C6E);
+  --pill-1: var(--secondary, #C9A84C);
+  --pill-2: #B89540;
+  color: var(--primary, #1A3C6E);
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
+  box-shadow:
+    0 0.5px 0.5px 1px rgba(255, 255, 255, 0.35),
+    0 10px 20px rgba(201, 168, 76, 0.35),
+    0 4px 5px 0px rgba(0, 0, 0, 0.08);
+}
+.buttonGold:hover {
+  box-shadow:
+    0 0 1px 2px rgba(255, 255, 255, 0.45),
+    0 15px 30px rgba(201, 168, 76, 0.5),
+    0 10px 3px -3px rgba(0, 0, 0, 0.05);
+}
+.buttonGold::after {
+  background:
+    linear-gradient(var(--pill-1), var(--pill-2)) padding-box,
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.4), rgba(0, 0, 0, 0.3)) border-box;
+}
+.buttonGold .outline::before {
+  background: conic-gradient(
+    from 180deg,
+    transparent 60%,
+    rgba(26, 60, 110, 0.85) 80%,
+    transparent 100%
+  );
+}
+.buttonGold .stateDefault .icon::before {
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(26, 60, 110, 0.45)
+  );
+}
+
+/* Small variant — used in the navigation bar. */
+.buttonSmall {
+  height: 44px;
+  min-width: 130px;
+  padding: 10px 22px;
+  font-size: 13px;
+  letter-spacing: 0.02em;
+  border-radius: 11px;
+}
+.buttonSmall::after {
+  border-radius: 11px;
+}
+.buttonSmall::before {
+  inset: 5px 4px 4px 4px;
+  border-radius: 22px;
+}
+.buttonSmall .state {
+  padding-left: 22px;
+}
+.buttonSmall .icon {
+  transform: scale(1);
+}
+.buttonSmall .icon svg {
+  width: 16px;
+  height: 16px;
+}
+.buttonSmall .stateSent svg {
+  transform: scale(1);
+}
+
+/* "Sent" state appearance */
+.button:focus .stateSent span {
+  opacity: 0;
+  animation: slideDown 0.8s ease forwards calc(var(--i) * 0.2s);
+}
+.button:focus .stateSent .icon svg {
+  opacity: 0;
+  animation: appear 1.2s ease forwards 0.8s;
+  color: var(--accent);
+}
+@keyframes appear {
+  0% {
+    opacity: 0;
+    transform: scale(4) rotate(-40deg);
+    color: var(--accent);
+    filter: blur(4px);
+  }
+  30% {
+    opacity: 1;
+    transform: scale(0.6);
+    filter: blur(1px);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+    filter: blur(0);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
