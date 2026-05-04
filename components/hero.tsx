@@ -1,6 +1,5 @@
-import { Scale, Shield, BadgeCheck } from 'lucide-react'
+import { ArrowRight, Scale, Shield, BadgeCheck } from 'lucide-react'
 import { COMPANY } from '@/lib/constants'
-import { ApplyLinkButton } from '@/components/apply-link-button'
 
 export function Hero() {
   return (
@@ -27,11 +26,17 @@ export function Hero() {
             Compare offers from <span className="font-bold text-white">leading banks &amp; NBFCs</span> across India. Zero processing fees, no mandatory insurance, and complete transparency on hidden costs — penalty-free and complication-free.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 mb-12 items-start sm:items-center">
-            <ApplyLinkButton href="#lead-form" text="Apply Now" sentText="Let's Go" size="lg" />
+          <div className="flex flex-col sm:flex-row gap-4 mb-12">
+            <a
+              href="#lead-form"
+              className="group bg-gradient-to-r from-secondary to-yellow-400 text-primary px-8 py-4 rounded-xl font-bold hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2 shadow-lg hover:scale-105"
+            >
+              Apply Now
+              <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+            </a>
             <a
               href="#how-it-works"
-              className="bg-white/15 backdrop-blur border border-white/30 text-white px-8 py-4 rounded-xl font-bold hover:bg-white/25 transition-all duration-300 hover:border-white/50 flex items-center justify-center gap-2 h-[64px]"
+              className="bg-white/15 backdrop-blur border border-white/30 text-white px-8 py-4 rounded-xl font-bold hover:bg-white/25 transition-all duration-300 hover:border-white/50 flex items-center justify-center gap-2"
             >
               See How It Works
             </a>

@@ -39,7 +39,7 @@ export const ALL_LENDERS: Lender[] = [
   { id: 'tata',       name: 'TATA Capital',        initials: 'TC',  type: 'nbfc', offers: ['personal', 'business'], accent: 'blue',    logoUrl: '/TataCapital.jpg' },
   { id: 'lnd',        name: 'L&D Finance',         initials: 'LD',  type: 'nbfc', offers: ['personal'],             accent: 'amber' },
   { id: 'bajaj',      name: 'Bajaj Finance',       initials: 'BJ',  type: 'nbfc', offers: ['personal', 'business'], accent: 'rose',    logoUrl: '/Bajaj.jpg' },
-  { id: 'shriram',    name: 'Sri Ram Finance',     initials: 'SR',  type: 'nbfc', offers: ['personal'],             accent: 'violet',  logoUrl: '/ShriramFinance.jpg' },
+  { id: 'shriram',    name: 'Shriram Finance',     initials: 'SR',  type: 'nbfc', offers: ['personal'],             accent: 'violet',  logoUrl: '/ShriramFinance.jpg' },
   { id: 'piramal',    name: 'Piramal Finance',     initials: 'PR',  type: 'nbfc', offers: ['personal', 'business'], accent: 'emerald', logoUrl: '/Piramal.jpg' },
   { id: 'incred',     name: 'InCred Finance',      initials: 'INC', type: 'nbfc', offers: ['personal', 'business'], accent: 'blue',    logoUrl: '/IncredFinance.jpg' },
   { id: 'finnable',   name: 'Finnable',            initials: 'FN',  type: 'nbfc', offers: ['personal'],             accent: 'amber',   logoUrl: '/Finnable.png' },

@@ -1,8 +1,9 @@
 'use client'
 
 import { useState } from 'react'
+import Image from 'next/image'
 import { Menu, X } from 'lucide-react'
-import { ApplyLinkButton } from '@/components/apply-link-button'
+import { COMPANY } from '@/lib/constants'
 
 export function Navigation() {
   const [isOpen, setIsOpen] = useState(false)
@@ -19,33 +20,57 @@ export function Navigation() {
 
   return (
     <nav className="sticky top-0 z-50 bg-white/90 backdrop-blur-lg border-b border-white/20 shadow-lg">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          {/* Logo */}
-          <div className="flex items-center gap-2">
-            <div className="w-10 h-10 bg-gradient-to-br from-primary to-blue-700 rounded-xl flex items-center justify-center shadow-lg hover:shadow-xl transition-shadow">
-              <span className="text-white font-bold text-lg">X</span>
-            </div>
-            <span className="font-bold text-primary text-lg hidden sm:inline">XpressFinserve</span>
-          </div>
+      {/*
+        3-section layout:
+          [Logo]  ──flex-1──  [Menu items, centered]  ──flex-1──  [Apply Now, right]
+        Logo sits flush to screen left, Apply Now sits flush to content right.
+        Menu floats centered between them.
+      */}
+      <div className="flex items-center h-16 pr-4 sm:pr-6 lg:pr-8">
+        {/* LEFT — Logo (flush to screen edge) */}
+        <a
+          href="#"
+          aria-label={`${COMPANY.name} — home`}
+          className="flex items-center group pl-2 sm:pl-3 shrink-0"
+        >
+          <Image
+            src="/Logo.png"
+            alt={`${COMPANY.name} logo`}
+            width={250}
+            height={60}
+            sizes="250px"
+            priority
+            className="h-[60px] w-auto object-contain origin-left scale-[2.5] group-hover:scale-[2.55] transition-transform duration-300"
+          />
+        </a>
 
-          {/* Desktop Menu */}
-          <div className="hidden md:flex items-center gap-8">
-            {navItems.map((item) => (
-              <a
-                key={item.label}
-                href={item.href}
-                className="text-foreground hover:text-primary transition-colors text-sm font-semibold relative group"
-              >
-                {item.label}
-                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-secondary to-yellow-400 group-hover:w-full transition-all duration-300" />
-              </a>
-            ))}
-          </div>
+        {/* CENTER — Desktop menu items */}
+        <div className="hidden md:flex flex-1 items-center justify-center gap-8">
+          {navItems.map((item) => (
+            <a
+              key={item.label}
+              href={item.href}
+              className="text-foreground hover:text-primary transition-colors text-sm font-semibold relative group"
+            >
+              {item.label}
+              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-secondary to-yellow-400 group-hover:w-full transition-all duration-300" />
+            </a>
+          ))}
+        </div>
 
-          {/* CTA Button */}
+        {/* Mobile spacer (replaces the centered menu on small screens) */}
+        <div className="flex-1 md:hidden" />
+
+        {/* RIGHT — CTA + mobile toggle */}
+        <div className="flex items-center gap-2 shrink-0">
+          {/* CTA Button (desktop only) */}
           <div className="hidden md:block">
-            <ApplyLinkButton href="#lead-form" text="Apply Now" sentText="Let's Go" size="sm" />
+            <a
+              href="#lead-form"
+              className="bg-gradient-to-r from-secondary to-yellow-400 text-primary px-6 py-2.5 rounded-lg font-bold hover:shadow-lg transition-all duration-300 hover:scale-105"
+            >
+              Apply Now
+            </a>
           </div>
 
           {/* Mobile Menu Button */}
@@ -57,32 +82,30 @@ export function Navigation() {
             {isOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
-
-        {/* Mobile Menu */}
-        {isOpen && (
-          <div className="md:hidden pb-4 border-t border-white/20 bg-white/50 backdrop-blur-md">
-            {navItems.map((item) => (
-              <a
-                key={item.label}
-                href={item.href}
-                className="block py-3 px-2 text-foreground hover:text-primary hover:bg-primary/5 transition-all rounded-lg font-medium"
-                onClick={() => setIsOpen(false)}
-              >
-                {item.label}
-              </a>
-            ))}
-            <div className="mt-4 px-2">
-              <ApplyLinkButton
-                href="#lead-form"
-                text="Apply Now"
-                sentText="Let's Go"
-                size="sm"
-                onClick={() => setIsOpen(false)}
-              />
-            </div>
-          </div>
-        )}
       </div>
+
+      {/* Mobile Menu (drops down below the nav) */}
+      {isOpen && (
+        <div className="md:hidden pb-4 border-t border-white/20 bg-white/50 backdrop-blur-md px-4">
+          {navItems.map((item) => (
+            <a
+              key={item.label}
+              href={item.href}
+              className="block py-3 px-2 text-foreground hover:text-primary hover:bg-primary/5 transition-all rounded-lg font-medium"
+              onClick={() => setIsOpen(false)}
+            >
+              {item.label}
+            </a>
+          ))}
+          <a
+            href="#lead-form"
+            className="block mt-4 bg-gradient-to-r from-secondary to-yellow-400 text-primary px-6 py-2.5 rounded-lg font-bold text-center hover:shadow-lg transition-all"
+            onClick={() => setIsOpen(false)}
+          >
+            Apply Now
+          </a>
+        </div>
+      )}
     </nav>
   )
 }

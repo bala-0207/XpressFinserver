@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import { CONTACT, COMPANY } from '@/lib/constants'
 
 export function Footer() {
@@ -13,11 +14,15 @@ export function Footer() {
         <div className="grid md:grid-cols-4 gap-8 mb-12">
           {/* Brand */}
           <div>
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 bg-gradient-to-br from-secondary to-yellow-400 rounded-xl flex items-center justify-center shadow-lg">
-                <span className="text-primary font-bold text-lg">X</span>
-              </div>
-              <span className="font-bold text-lg">{COMPANY.name}</span>
+            <div className="inline-flex items-center justify-center bg-white rounded-2xl shadow-lg mb-6 overflow-hidden">
+              <Image
+                src="/Logo.png"
+                alt={`${COMPANY.name} logo`}
+                width={250}
+                height={60}
+                sizes="250px"
+                className="h-[100px] w-auto object-contain block"
+              />
             </div>
             <p className="text-blue-100 text-sm leading-relaxed mb-4">
               {COMPANY.tagline} &mdash; {COMPANY.since}.

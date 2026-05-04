@@ -39,7 +39,7 @@ export function Vision() {
             {/* Image frame — keeps the rounded card aesthetic from the placeholder */}
             <div className="relative rounded-2xl overflow-hidden border border-white/40 shadow-lg group-hover:shadow-2xl transition-all duration-500 aspect-[4/3] bg-muted">
               <Image
-                src="/image1.jpg"
+                src="/XpressFinserve.png"
                 alt={`${COMPANY.name} \u2014 ${COMPANY.tagline}`}
                 fill
                 priority
