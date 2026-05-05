@@ -8,9 +8,13 @@ import { SubmitButton } from '@/components/apply-button'
 
 interface FormState {
   loanType: string
+  // Personal-only fields
+  companyName: string
+  monthlyIncome: string
+  // Business-only field
   businessName: string
+  // Common
   loanAmount: string
-  loanPurpose: string
   firstName: string
   lastName: string
   email: string
@@ -23,9 +27,10 @@ interface FormState {
 
 const EMPTY_FORM: FormState = {
   loanType: '',
+  companyName: '',
+  monthlyIncome: '',
   businessName: '',
   loanAmount: '',
-  loanPurpose: '',
   firstName: '',
   lastName: '',
   email: '',
@@ -48,9 +53,20 @@ export function LeadForm() {
       ...formData,
       [e.target.name]: e.target.value,
     }
-    // Clear stale business name if user switches away from Business loan.
-    if (e.target.name === 'loanType' && e.target.value !== 'business') {
-      next.businessName = ''
+    // When loan type switches, clear fields that don't apply to the new type.
+    // This prevents stale data from leaking into the wrong submission.
+    if (e.target.name === 'loanType') {
+      if (e.target.value === 'personal') {
+        next.businessName = ''
+      } else if (e.target.value === 'business') {
+        next.companyName = ''
+        next.monthlyIncome = ''
+      } else {
+        // No type selected — clear all loan-type-specific fields.
+        next.businessName = ''
+        next.companyName = ''
+        next.monthlyIncome = ''
+      }
     }
     // When state changes, clear the city so the user picks one valid for the
     // newly-selected state.
@@ -99,6 +115,7 @@ export function LeadForm() {
     }
   }
 
+  const isPersonal = formData.loanType === 'personal'
   const isBusiness = formData.loanType === 'business'
   const availableCities = formData.state ? getCitiesForState(formData.state) : []
 
@@ -176,6 +193,45 @@ export function LeadForm() {
                 </select>
               </div>
 
+              {/* PERSONAL-ONLY: Company Name + Monthly Income (side-by-side) */}
+              {isPersonal && (
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div>
+                    <label htmlFor="companyName" className="block text-sm font-medium text-foreground mb-2">
+                      Company Name <span className="text-secondary">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      id="companyName"
+                      name="companyName"
+                      value={formData.companyName}
+                      onChange={handleChange}
+                      required
+                      placeholder="Where you currently work"
+                      className="w-full px-4 py-3 rounded-lg border border-border bg-white text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="monthlyIncome" className="block text-sm font-medium text-foreground mb-2">
+                      Monthly Income <span className="text-secondary">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      id="monthlyIncome"
+                      name="monthlyIncome"
+                      value={formData.monthlyIncome}
+                      onChange={handleChange}
+                      required
+                      placeholder="e.g., ₹50,000"
+                      className="w-full px-4 py-3 rounded-lg border border-border bg-white text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                    />
+                  </div>
+                </div>
+              )}
+
+              {/* BUSINESS-ONLY: Business Name + Loan Amount (side-by-side)
+                  PERSONAL: only Loan Amount, full width
+                  No selection yet: only Loan Amount, full width */}
               <div className={isBusiness ? 'grid md:grid-cols-2 gap-6' : ''}>
                 {isBusiness && (
                   <div>
@@ -211,22 +267,7 @@ export function LeadForm() {
                 </div>
               </div>
 
-              <div>
-                <label htmlFor="loanPurpose" className="block text-sm font-medium text-foreground mb-2">
-                  Purpose of Loan <span className="text-secondary">*</span>
-                </label>
-                <input
-                  type="text"
-                  id="loanPurpose"
-                  name="loanPurpose"
-                  value={formData.loanPurpose}
-                  onChange={handleChange}
-                  required
-                  placeholder="Working capital, expansion, personal need, etc."
-                  className="w-full px-4 py-3 rounded-lg border border-border bg-white text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                />
-              </div>
-
+              {/* Name fields */}
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
                   <label htmlFor="firstName" className="block text-sm font-medium text-foreground mb-2">
@@ -260,6 +301,7 @@ export function LeadForm() {
                 </div>
               </div>
 
+              {/* Contact fields */}
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
                   <label htmlFor="email" className="block text-sm font-medium text-foreground mb-2">
@@ -293,6 +335,7 @@ export function LeadForm() {
                 </div>
               </div>
 
+              {/* State + City (cascading) */}
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
                   <label htmlFor="state" className="block text-sm font-medium text-foreground mb-2">

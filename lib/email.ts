@@ -5,9 +5,13 @@ import { Resend } from 'resend'
 // -----------------------------------------------------------------------------
 export interface LeadData {
   loanType: 'personal' | 'business'
+  // Personal-only (empty string for Business leads)
+  companyName: string
+  monthlyIncome: string
+  // Business-only (empty string for Personal leads)
   businessName: string
+  // Common
   loanAmount: string
-  loanPurpose: string
   firstName: string
   lastName: string
   email: string
@@ -77,8 +81,9 @@ function buildEmailHtml(data: LeadData, submittedAt: string): string {
     <table style="width: 100%; border-collapse: collapse;">
       ${row('Loan Type', loanTypeLabel)}
       ${data.businessName ? row('Business Name', data.businessName) : ''}
+      ${data.companyName ? row('Company Name', data.companyName) : ''}
+      ${data.monthlyIncome ? row('Monthly Income', data.monthlyIncome) : ''}
       ${row('Loan Amount', data.loanAmount)}
-      ${row('Purpose', data.loanPurpose)}
       ${row('Name', fullName)}
       ${row('Email', data.email, 'email')}
       ${row('Phone', data.phone, 'tel')}
@@ -118,8 +123,9 @@ function buildEmailText(data: LeadData, submittedAt: string): string {
     ``,
     `Loan Type:    ${loanTypeLabel}`,
     data.businessName ? `Business Name: ${data.businessName}` : '',
+    data.companyName ? `Company Name:  ${data.companyName}` : '',
+    data.monthlyIncome ? `Monthly Income:${data.monthlyIncome}` : '',
     `Loan Amount:  ${data.loanAmount}`,
-    `Purpose:      ${data.loanPurpose}`,
     `Name:         ${fullName}`,
     `Email:        ${data.email}`,
     `Phone:        ${data.phone}`,

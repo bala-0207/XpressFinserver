@@ -18,7 +18,7 @@ Drop logo files here using the lender's `id` from `lib/constants.ts` as the file
 Use the exact `id` value from constants.ts. Current ids:
 
 **Banks (5):** `hdfc`, `icici`, `axis`, `indusind`, `idfc`
-**NBFCs (9):** `tata`, `lnd`, `bajaj`, `shriram`, `piramal`, `incred`, `finnable`, `poonawalla`, `neogrowth`
+**NBFCs (9):** `tata`, `lnt`, `bajaj`, `piramal`, `incred`, `finnable`, `poonawalla`, `flexiloans`, `lendingkart`
 
 ## Recommended specs
 

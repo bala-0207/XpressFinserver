@@ -7,9 +7,13 @@ import { sendLeadEmail, type LeadData } from '@/lib/email'
 // -----------------------------------------------------------------------------
 const LeadSchema = z.object({
   loanType: z.enum(['personal', 'business']),
+  // Personal-only fields (validated conditionally below)
+  companyName: z.string().max(200).optional().default(''),
+  monthlyIncome: z.string().max(50).optional().default(''),
+  // Business-only field
   businessName: z.string().max(200).optional().default(''),
+  // Common fields
   loanAmount: z.string().min(1, 'Loan amount required').max(50),
-  loanPurpose: z.string().min(2, 'Purpose required').max(500),
   firstName: z.string().min(1, 'First name required').max(100),
   lastName: z.string().min(1, 'Last name required').max(100),
   email: z.string().email('Valid email required'),
@@ -54,25 +58,36 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ ok: true })
   }
 
-  // Business loan must include a business name.
+  // Conditional required fields based on loan type.
   if (data.loanType === 'business' && !data.businessName.trim()) {
     return NextResponse.json(
-      {
-        ok: false,
-        error: 'Business name is required for business loans.',
-      },
+      { ok: false, error: 'Business name is required for business loans.' },
       { status: 400 }
     )
   }
+  if (data.loanType === 'personal') {
+    if (!data.companyName.trim()) {
+      return NextResponse.json(
+        { ok: false, error: 'Company name is required for personal loans.' },
+        { status: 400 }
+      )
+    }
+    if (!data.monthlyIncome.trim()) {
+      return NextResponse.json(
+        { ok: false, error: 'Monthly income is required for personal loans.' },
+        { status: 400 }
+      )
+    }
+  }
 
-  // Strip the honeypot field before passing to the email builder.
-  // Also clear businessName for Personal loans — belt-and-suspenders against
-  // any stale value the client might have sent.
+  // Build the lead payload. Clear fields that don't apply to the chosen loan
+  // type — defence-in-depth against stale values reaching the email.
   const leadData: LeadData = {
     loanType: data.loanType,
     businessName: data.loanType === 'business' ? data.businessName : '',
+    companyName: data.loanType === 'personal' ? data.companyName : '',
+    monthlyIncome: data.loanType === 'personal' ? data.monthlyIncome : '',
     loanAmount: data.loanAmount,
-    loanPurpose: data.loanPurpose,
     firstName: data.firstName,
     lastName: data.lastName,
     email: data.email,

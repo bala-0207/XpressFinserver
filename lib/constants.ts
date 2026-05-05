@@ -37,14 +37,14 @@ export const ALL_LENDERS: Lender[] = [
 
   // ---- NBFCs (9) ----
   { id: 'tata',       name: 'TATA Capital',        initials: 'TC',  type: 'nbfc', offers: ['personal', 'business'], accent: 'blue',    logoUrl: '/TataCapital.jpg' },
-  { id: 'lnd',        name: 'L&D Finance',         initials: 'LD',  type: 'nbfc', offers: ['personal'],             accent: 'amber' },
+  { id: 'lnt',        name: 'L&T Finance',         initials: 'LT',  type: 'nbfc', offers: ['personal'],             accent: 'amber',   logoUrl: '/L&T.jpg' },
   { id: 'bajaj',      name: 'Bajaj Finance',       initials: 'BJ',  type: 'nbfc', offers: ['personal', 'business'], accent: 'rose',    logoUrl: '/Bajaj.jpg' },
-  { id: 'shriram',    name: 'Shriram Finance',     initials: 'SR',  type: 'nbfc', offers: ['personal'],             accent: 'violet',  logoUrl: '/ShriramFinance.jpg' },
   { id: 'piramal',    name: 'Piramal Finance',     initials: 'PR',  type: 'nbfc', offers: ['personal', 'business'], accent: 'emerald', logoUrl: '/Piramal.jpg' },
   { id: 'incred',     name: 'InCred Finance',      initials: 'INC', type: 'nbfc', offers: ['personal', 'business'], accent: 'blue',    logoUrl: '/IncredFinance.jpg' },
   { id: 'finnable',   name: 'Finnable',            initials: 'FN',  type: 'nbfc', offers: ['personal'],             accent: 'amber',   logoUrl: '/Finnable.png' },
   { id: 'poonawalla', name: 'Poonawalla Fincorp',  initials: 'PN',  type: 'nbfc', offers: ['personal', 'business'], accent: 'rose',    logoUrl: '/Ponnawalla.jpg' },
-  { id: 'neogrowth',  name: 'NeoGrowth',           initials: 'NG',  type: 'nbfc', offers: ['business'],             accent: 'violet',  logoUrl: '/NeoGrowth.png' },
+  { id: 'flexiloans', name: 'FlexiLoans',          initials: 'FL',  type: 'nbfc', offers: ['business'],             accent: 'violet',  logoUrl: '/Flexiloans.png' },
+  { id: 'lendingkart',name: 'Lendingkart',         initials: 'LK',  type: 'nbfc', offers: ['business'],             accent: 'emerald', logoUrl: '/LendingKart.png' },
 ]
 
 // Derived helpers — use these in components instead of filtering inline
@@ -52,6 +52,47 @@ export const ALL_BANKS = ALL_LENDERS.filter((l) => l.type === 'bank')
 export const ALL_NBFCS = ALL_LENDERS.filter((l) => l.type === 'nbfc')
 export const PERSONAL_LOAN_LENDERS = ALL_LENDERS.filter((l) => l.offers.includes('personal'))
 export const BUSINESS_LOAN_LENDERS = ALL_LENDERS.filter((l) => l.offers.includes('business'))
+
+// -----------------------------------------------------------------------------
+// Instant Loans — direct partner application links.
+//
+// These are co-branded application URLs where the user lands directly on the
+// lender's portal with XpressFinserve's partner / DSA tracking codes embedded.
+// The codes are needed for attribution / commission tracking and must NOT be
+// stripped. Each link opens in a new tab so the user does not lose this site.
+// -----------------------------------------------------------------------------
+
+export interface InstantLoanPartner {
+  id: string
+  lenderName: string
+  productName: string
+  description: string
+  logoUrl: string
+  applyUrl: string
+}
+
+export const INSTANT_LOAN_PARTNERS: InstantLoanPartner[] = [
+  {
+    id: 'poonawalla-instant',
+    lenderName: 'Poonawalla Fincorp',
+    productName: 'Instant Pocket Loan',
+    description:
+      'Quick personal loan with instant decision — apply directly on Poonawalla’s portal with our partner code pre-filled.',
+    logoUrl: '/Ponnawalla.jpg',
+    applyUrl:
+      'https://instant-pocket-loan.poonawallafincorp.com/?redirectto=primepl&utm_DSA_Code=PTN00405&UTM_Partner_AgentCode=pavisekar134@gmail.com&UTM_Partner_Name=DSA_XPRESS_FINSERVE&UTM_SM_Name=abdul.basha@poonawallafincorp.com',
+  },
+  {
+    id: 'indusind-easycredit',
+    lenderName: 'IndusInd Bank',
+    productName: 'Indus EasyCredit Personal Loan',
+    description:
+      'Get a personal loan offer from IndusInd Bank in minutes — apply through our partner channel.',
+    logoUrl: '/IndusInd.jpg',
+    applyUrl:
+      'https://induseasycredit.indusind.bank.in/customer/personal-loan/new-lead?utm_source=assisted&utm_medium=IBLV2179&utm_campaign=Personal-Loan&utm_content=1',
+  },
+]
 
 // -----------------------------------------------------------------------------
 // Branches (the 4 physical office locations — used by branches.tsx)
@@ -94,8 +135,8 @@ export const SERVICES = [
   {
     title: 'Personal Loan',
     description:
-      'Unsecured personal loans from 5 leading banks and 8 NBFCs. Compare rates, processing fees and hidden charges side-by-side and pick what truly fits your needs.',
-    amount: '5 Banks + 8 NBFCs',
+      'Unsecured personal loans from 5 leading banks and 7 NBFCs. Compare rates, processing fees and hidden charges side-by-side and pick what truly fits your needs.',
+    amount: '5 Banks + 7 NBFCs',
     type: 'personal',
     bullets: [
       'Zero processing fees options',
@@ -106,8 +147,8 @@ export const SERVICES = [
   {
     title: 'Business Loan',
     description:
-      'Unsecured business financing from 4 banks and 6 NBFCs. Fast approvals, competitive rates, no hidden fees — for MSMEs and growing enterprises.',
-    amount: '4 Banks + 6 NBFCs',
+      'Unsecured business financing from 4 banks and 7 NBFCs. Fast approvals, competitive rates, no hidden fees — for MSMEs and growing enterprises.',
+    amount: '4 Banks + 7 NBFCs',
     type: 'business',
     bullets: [
       'Fast turnaround for working capital needs',
@@ -231,7 +272,7 @@ export const STATS: Stat[] = [
   { label: 'Years of Service', value: _yearsServing, suffix: '+' },
   { label: 'Cities Served', value: 4, suffix: '' },
   { label: 'Partner Banks', value: 5, suffix: '' },
-  { label: 'Partner NBFCs', value: 9, suffix: '+' },
+  { label: 'Partner NBFCs', value: 9, suffix: '' },
 ]
 
 // -----------------------------------------------------------------------------

@@ -14,6 +14,7 @@ export function Navigation() {
     { label: 'Why Us', href: '#why-us' },
     { label: 'How It Works', href: '#how-it-works' },
     { label: 'Lenders', href: '#lenders' },
+    { label: 'Instant Loans', href: '#instant-loans' },
     { label: 'Branches', href: '#locations' },
     { label: 'Contact', href: '#contact' },
   ]
